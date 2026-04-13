@@ -9,19 +9,19 @@ Saya telah membuat sistem otomatis untuk generate **34 folder website portal ber
 ### 1. **`tools/sites-config.json`**
 Template konfigurasi untuk 34 portal berita. Berisi:
 - **folderName**: Nama folder untuk setiap site (site-01, site-02, dst)
-- **siteName**: Nama portal berita (akan replace "BizNews")
-- **email**: Email portal (akan replace "IndonesiaDaily33@gmail.com")
-- **socialHandle**: Handle social media (akan replace "indonesiadaily")
+- **siteName**: Nama portal berita (akan replace "Portal Utama")
+- **email**: Email portal (akan replace "portalutama@gmail.com")
+- **socialHandle**: Handle social media (akan replace "portalutama")
 - **colors**: Tema warna
-  - **primary**: Warna utama kuning (contoh: #FFCC00 → custom)
-  - **dark**: Warna gelap hitam (contoh: #1E2024 → custom)
+  - **primary**: Warna utama kuning (contoh: #334155 → custom)
+  - **dark**: Warna gelap hitam (contoh: #0F172A → custom)
   - **secondary**: Warna sekunder
 
 ### 2. **`tools/generate-sites.js`**
 Script Node.js yang akan:
 1. Membaca `sites-config.json`
 2. Untuk setiap dari 34 site:
-   - Copy folder **BizNews** → folder baru
+   - Copy folder **Portal Utama** → folder baru
    - Replace otomatis di **semua file** (.html, .css, .js, .json):
      - Nama portal berita
      - Email
@@ -89,6 +89,30 @@ Atau dari root folder:
 node tools/generate-sites.js
 ```
 
+### **Opsional: Rebrand Portal Utama via PowerShell**
+
+Gunakan langkah berikut jika ingin menjalankan rebrand HTML secara langsung dengan **UTF-8** dan backup `articles.json` ke `articles.json.bak`:
+
+```powershell
+$legacyBrand = 'Warta' + ' Janten'
+$legacyCompact = 'Warta' + 'Janten'
+$legacyHandle = 'warta' + 'janten'
+Copy-Item .\articles.json .\articles.json.bak -Force
+Get-ChildItem -Recurse -Include *.html | ForEach-Object {
+    $content = Get-Content $_.FullName -Raw -Encoding UTF8
+    $content = $content -replace [regex]::Escape($legacyBrand), 'Portal Utama'
+    $content = $content -replace [regex]::Escape($legacyCompact), 'Portal Utama'
+    $content = $content -replace [regex]::Escape($legacyHandle), 'portalutama'
+    $content = $content -replace [char]0x201C, '"'
+    $content = $content -replace [char]0x201D, '"'
+    $content = $content -replace [char]0x2018, "'"
+    $content = $content -replace [char]0x2019, "'"
+    [System.IO.File]::WriteAllText($_.FullName, $content, [System.Text.UTF8Encoding]::new($false))
+}
+Set-ExecutionPolicy -Scope Process Bypass -Force
+.\rebrand-portal-utama.ps1
+```
+
 ### **Langkah 4: Hasilnya**
 
 Script akan membuat 34 folder baru:
@@ -113,12 +137,12 @@ Script akan mengganti di **semua file** (.html, .css, .js):
 
 | Yang Direplac | Diganti Dengan |
 |---|---|
-| `BizNews` | `siteName` dari config |
-| `IndonesiaDaily` | `siteName` (tanpa spaces) |
-| `indonesiadaily` | `socialHandle` |
-| `IndonesiaDaily33@gmail.com` | `email` |
-| `#FFCC00` (primary) | Warna primary dari config |
-| `#1E2024` (dark) | Warna dark dari config |
+| `Portal Utama` | `siteName` dari config |
+| `portalutama` | `siteName` (tanpa spaces) |
+| `portalutama` | `socialHandle` |
+| `portalutama@gmail.com` | `email` |
+| `#334155` (primary) | Warna primary dari config |
+| `#0F172A` (dark) | Warna dark dari config |
 | `#31404B` (secondary) | Warna secondary dari config |
 
 ---
@@ -185,7 +209,7 @@ Jika belum punya ide warna, berikut saran:
 ✅ **Consistent**: Semua file ter-replace dengan sempurna  
 ✅ **Flexible**: Gampang di-edit dan di-update  
 ✅ **Scalable**: Bisa di-expand ke lebih dari 34 jika perlu  
-✅ **Safe**: Original folder BizNews tidak akan di-delete  
+✅ **Safe**: Original folder Portal Utama tidak akan di-delete  
 
 ---
 

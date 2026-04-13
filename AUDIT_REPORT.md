@@ -1,4 +1,4 @@
-# 🔍 AUDIT LENGKAP WEBSITE BIZNEWS
+# 🔍 AUDIT LENGKAP WEBSITE PORTAL UTAMA
 
 **Tanggal Audit:** 18 Feb 2026  
 **Status:** ✅ MOSTLY GOOD dengan beberapa poin minor
